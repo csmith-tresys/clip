@@ -77,14 +77,11 @@ clip-selinux-policy
 -clip-selinux-policy-mls
 clip-selinux-policy-clip
 m4
-scap-security-guide
-aqueduct
-aqueduct-SSG
+# TODO Add back in once we get everything installing
+#scap-security-guide
 dracut
 clip-dracut-module
-#aqueduct-ssg-bash
 # SRS: this will need python-simplejson from epel on RHEL 7
-#secstate
 
 acl
 aide
@@ -98,9 +95,12 @@ bind-utils
 chkconfig
 coreutils
 cpio
+dbus
 device-mapper
 e2fsprogs
 filesystem
+firewalld
+grub2
 glibc
 initscripts
 iproute
@@ -109,11 +109,13 @@ iptables-ipv6
 iputils
 kbd
 kernel
+lvm2
 ncurses
 openscap
 #openscap-content
 openscap-utils
-openswan
+# why was this needed?
+#openswan
 passwd
 #pam_passwdqc
 perl
@@ -129,6 +131,7 @@ ruby
 setup
 setools-console
 shadow-utils
+systemd
 sudo
 util-linux-ng
 vim-minimal
@@ -141,13 +144,11 @@ yum
 -abrt-cli
 -acpid
 -alsa-utils
--authconfig
 -b43-fwcutter
 -b43-openfwwf
 -blktrace
 -bridge-utils
 -cryptsetup-luks
--dbus
 -dhclient
 -dmraid
 -dosfstools
@@ -296,34 +297,10 @@ usermod -L root
 
 ######## END DEFAULT USER CONFIG ##########
 if false; then
-###### START SECSTATE AUDIT AND REMEDIATE ###########
 
 # FIXME: Remove <platform> tags from SSG to temporarily resolve non-applicable openscap results
-sed -i -r -e "s/<platform.*//g" /usr/local/scap-security-guide/RHEL6/output/ssg-rhel6-xccdf.xml
+#sed -i -r -e "s/<platform.*//g" /usr/local/scap-security-guide/RHEL6/output/ssg-rhel6-xccdf.xml
 
-# SecState's timeout is too short for some remediation scripts in Aqueduct.
-sed -i -e 's/^remediation_timeout.*/remediation_timeout=30/' /etc/secstate/secstate.conf
-
-# Import SSG into secstate.
-# Running this command again, even after install, will result in a harmless error
-# as you are effectively importing the same IDs again.
-echo "Importing SSG content into secstate..."
-secstate import /usr/local/scap-security-guide/RHEL6/output/ssg-rhel6-xccdf.xml --profile=common
-
-cd /root
-echo "About to use secstate to do a pre-remediation audit using SSG content..."
-secstate audit 
-
-setsebool secstate_enable_remediation 1
-if [ x"$CONFIG_BUILD_SECSTATE_REMEDIATE" == "xy" ]; then
-	# Remediate w/ secstate using aqueduct content
-	secstate remediate -y --verbose
-	echo "About to use secstate to do a post-remediation audit using SSG content..."
-	secstate audit
-	echo "All done with secstate :)  Now go play with your freshly remediated system!"
-fi
-
-###### END SECSTATE AUDIT AND REMEDIATE ###########
 fi
 
 # Disable all that GUI stuff during boot so we can actually see what is going on during boot.
