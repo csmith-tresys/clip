@@ -45,7 +45,8 @@ install
 timezone --utc Etc/GMT
 auth --useshadow --passalgo=sha512
 
-selinux --enforcing
+#selinux --enforcing
+selinux --permissive
 firewall --enabled
 reboot
 
@@ -319,6 +320,7 @@ plymouth-set-default-theme details --rebuild-initrd &> /dev/null
 
 # Set permissive mode
 export POLNAME=`sestatus |awk '/Policy from config file:/ { print $5; }'`
+CONFIG_BUILD_ENFORCING_MODE=n
 if [ x"$CONFIG_BUILD_ENFORCING_MODE" != "xy" ]; then
     echo "Setting permissive mode..."
     echo -e "#THIS IS A DEBUG BUILD HENCE SELINUX IS IN PERMISSIVE MODE\nSELINUX=permissive\nSELINUXTYPE=$POLNAME\n" > /etc/selinux/config
