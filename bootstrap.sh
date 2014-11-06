@@ -6,32 +6,30 @@
 
 prompt_to_enter_repo_path ()
 {
-	local originalname=$1
-	local originalpath=$2
-        if [ -z $originalpath ]; then
+        if [ -z "${2-}" ]; then
                 /bin/echo -e "
-There is no default path set for the $originalname repo.  You must provide a path for the $originalname repo or the script will
+There is no default path set for the $1 repo.  You must provide a path for the $1 repo or the script will
 exit immediately.
-Enter a fully qualified path for the $originalname repo."
+Enter a fully qualified path for the $1 repo."
                 read path
                 if [ x"$path" == "x" ]; then
                         /bin/echo -e"
-No default path exists for the $originalname repo and none provided - Exiting"
+No default path exists for the $1 repo and none provided - Exiting"
                         exit
                 else
-                        /bin/cat CONFIG_REPOS | /bin/sed -e "s/^\([\"$originalname\"].*\)$/#\1/" > CONFIG_REPOS
-                        /bin/echo "$originalname = $path" >> CONFIG_REPOS
+                        /bin/cat CONFIG_REPOS | /bin/sed -e "s/^\([\"$1\"].*\)$/#\1/" > CONFIG_REPOS
+                        /bin/echo "$1 = $path" >> CONFIG_REPOS
                 fi
         else
                 /bin/echo -e "
-Enter a fully qualified path for the $originalname repo.  If you do not enter a path then the default path
-will be used in CONFIG_REPOS.  The default path for the $originalname yum repo is $originalpath\n"
+Enter a fully qualified path for the $1 repo.  If you do not enter a path then the default path
+will be used in CONFIG_REPOS.  The default path for the $1 yum repo is $2\n"
                 /bin/echo -e "
 Enter a fully qualified path for this yum repo\n"
                 read path
                 if [ ! x"$path" == "x" ]; then
-                        /bin/cat CONFIG_REPOS | /bin/sed -e "s/^\([\"$originalname\"].*\)$/#\1/" > CONFIG_REPOS
-                        /bin/echo "$originalname = $path" >> CONFIG_REPOS
+                        /bin/cat CONFIG_REPOS | /bin/sed -e "s/^\([\"$1\"].*\)$/#\1/" > CONFIG_REPOS
+                        /bin/echo "$1 = $path" >> CONFIG_REPOS
                 fi
         fi
 
