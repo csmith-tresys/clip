@@ -159,6 +159,21 @@ if ! rpm -q pungi >/dev/null; then
 	popd > /dev/null
 fi
 
+echo "*********************checking pungi************************"
+# check the pungi version (if the latest is not installed, then install it)
+LATEST_PUNGI=pungi-2.14-2.el7
+/bin/echo $LATEST_PUNGI
+/usr/bin/rpm -qa | /usr/bin/grep pungi | /usr/bin/grep -q $LATEST_PUNGI && LATEST_PUNGI_INSTALLED=1 || LATEST_PUNGI_INSTALLED=0
+if [ $LATEST_PUNGI_INSTALLED -eq 0 ]; then
+	/bin/echo "Latest pungi rpm [$LATEST_PUNGI.noarch.rpm] not installed...installing"
+	make bare -C packages/pungi/
+	make -C packages/pungi	
+	sudo /usr/bin/rpm -ivh --force ./packages/pungi/$LATEST_PUNGI.noarch.rpm
+	cp ./packages/pungi/$LATEST_PUNGI.src.rpm ./repos/clip-srpms/
+else
+	/bin/echo "Latest pungi rpm [$LATEST_PUNGI.noarch.rpm] already installed"
+fi
+
 if ! rpm -q "livecd-tools-13.4.4-99.el7.noarch" > /dev/null; then 
 	if rpm -q "livecd-tools" > /dev/null; then
 		/bin/echo "You have livecd-tools installed, but not our version. Our version contains 
