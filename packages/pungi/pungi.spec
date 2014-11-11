@@ -1,6 +1,9 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-Name:           %{pkgname}
+%define version 2.14
+%define release 2.el7
+
+Name:           pungi
 Version:        %{version}
 Release:        %{release}
 Summary:        Distribution compose tool
@@ -8,8 +11,7 @@ Summary:        Distribution compose tool
 Group:          Development/Tools
 License:        GPLv2
 URL:            https://fedorahosted.org/pungi
-Source0:        https://fedorahosted.org/pungi/attachment/wiki/%{version}/%{name}-%{version}.tar.bz2
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:	$RPM_TOPDIR/SOURCES/pungi-2.14.tar.gz
 Requires:       lorax, yum => 3.2.19, repoview, createrepo >= 0.4.11
 BuildRequires:  python-devel
 
@@ -49,7 +51,7 @@ rm -rf $RPM_BUILD_ROOT
   %{python_sitelib}/%{name}-%{version}-py?.?.egg-info
 %endif
 %{_bindir}/pungi
-%{_bindir}/pkgorder
+#%{_bindir}/pkgorder
 %{_datadir}/pungi
 %{_mandir}/man8/pungi.8.gz
 /var/cache/pungi
