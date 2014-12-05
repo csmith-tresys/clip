@@ -172,6 +172,29 @@ seutil_read_config(init_t)
 
 miscfiles_read_localization(init_t)
 
+ifdef(`init_systemd',`
+	kernel_dyntrans_to(init_t)
+')
+
+ifdef(`init_systemd',`
+	allow init_t self:process { getcap getsched setpgid setfscreate setcap setrlimit };
+	# handle instances where an old labeled init script is encountered.
+	typeattribute init_t init_run_all_scripts_domain;
+
+	allow init_t self:process { getcap getsched setpgid setfscreate setsockcreate setcap setrlimit };
+ 	allow init_t self:capability2 block_suspend;
+ 	allow init_t self:netlink_audit_socket { write nlmsg_relay read nlmsg_readpriv };
+ 	allow init_t self:netlink_kobject_uevent_socket read;
+')
+
+ifdef(`init_systemd',`
+	# run systemd misc initializations
+	# in the initrc_t domain, as would be
+	# done in traditional sysvinit/upstart.
+	corecmd_bin_entry_type(initrc_t)
+	corecmd_bin_domtrans(init_t, initrc_t)
+')
+
 allow init_t self:process setsched;
 
 ifdef(`distro_gentoo',`

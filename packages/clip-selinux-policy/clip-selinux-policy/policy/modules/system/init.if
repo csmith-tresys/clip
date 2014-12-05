@@ -199,42 +199,50 @@ interface(`init_daemon_domain',`
 
 	typeattribute $1 daemon;
 
-	domain_type($1)
-	domain_entry_file($1, $2)
+	ifdef(`init_systemd',`
+		init_domain($1, $2)
+	',`
+		domain_type($1)
+		domain_entry_file($1, $2)
 
-	role system_r types $1;
+		role system_r types $1;
 
-	domtrans_pattern(initrc_t, $2, $1)
+		ifdef(`init_systemd',`
+			init_domain($1, $2)
+		',`
+			domtrans_pattern(initrc_t, $2, $1)
+		')
 
-	# daemons started from init will
-	# inherit fds from init for the console
-	init_dontaudit_use_fds($1)
-	term_dontaudit_use_console($1)
+		# daemons started from init will
+		# inherit fds from init for the console
+		init_dontaudit_use_fds($1)
+		term_dontaudit_use_console($1)
 
-	# init script ptys are the stdin/out/err
-	# when using run_init
-	init_use_script_ptys($1)
+		# init script ptys are the stdin/out/err
+		# when using run_init
+		init_use_script_ptys($1)
 
-	ifdef(`direct_sysadm_daemon',`
-		domtrans_pattern(direct_run_init, $2, $1)
-		allow direct_run_init $1:process { noatsecure siginh rlimitinh };
+		ifdef(`direct_sysadm_daemon',`
+			domtrans_pattern(direct_run_init, $2, $1)
+			allow direct_run_init $1:process { noatsecure siginh rlimitinh };
+		')
 
 		typeattribute $1 direct_init;
 		typeattribute $2 direct_init_entry;
 
 		userdom_dontaudit_use_user_terminals($1)
-	')
 
-	ifdef(`hide_broken_symptoms',`
-		# RHEL4 systems seem to have a stray
-		# fds open from the initrd
-		ifdef(`distro_rhel4',`
-			kernel_dontaudit_use_fds($1)
+		ifdef(`hide_broken_symptoms',`
+			# RHEL4 systems seem to have a stray
+			# fds open from the initrd
+			ifdef(`distro_rhel4',`
+				kernel_dontaudit_use_fds($1)
+			')
 		')
-	')
 
-	optional_policy(`
-		nscd_socket_use($1)
+		optional_policy(`
+			nscd_socket_use($1)
+		')
 	')
 ')
 
@@ -285,15 +293,19 @@ interface(`init_ranged_daemon_domain',`
 		type initrc_t;
 	')
 
-	init_daemon_domain($1, $2)
+	ifdef(`init_systemd',`
+		init_ranged_domain($1, $2, $3)
+	',`
+		init_daemon_domain($1, $2)
 
-	ifdef(`enable_mcs',`
-		range_transition initrc_t $2:process $3;
-	')
+		ifdef(`enable_mcs',`
+			range_transition initrc_t $2:process $3;
+		')
 
-	ifdef(`enable_mls',`
-		range_transition initrc_t $2:process $3;
-		mls_rangetrans_target($1)
+		ifdef(`enable_mls',`
+			range_transition initrc_t $2:process $3;
+			mls_rangetrans_target($1)
+		')
 	')
 ')
 
@@ -403,15 +415,19 @@ interface(`init_ranged_system_domain',`
 		type initrc_t;
 	')
 
-	init_system_domain($1, $2)
+	ifdef(`init_systemd',`
+		init_ranged_domain($1, $2, $3)
+	',`
+		init_system_domain($1, $2)
 
-	ifdef(`enable_mcs',`
-		range_transition initrc_t $2:process $3;
-	')
+		ifdef(`enable_mcs',`
+			range_transition initrc_t $2:process $3;
+		')
 
-	ifdef(`enable_mls',`
-		range_transition initrc_t $2:process $3;
-		mls_rangetrans_target($1)
+		ifdef(`enable_mls',`
+			range_transition initrc_t $2:process $3;
+			mls_rangetrans_target($1)
+		')
 	')
 ')
 
@@ -1749,3 +1765,70 @@ interface(`init_udp_recvfrom_all_daemons',`
 	')
 	corenet_udp_recvfrom_labeled($1, daemon)
 ')
+
+#####################################
+## <summary>
+##	Create files in an init lib directory.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+## <param name="file_type">
+##	<summary>
+##	The type of the object to be created
+##	</summary>
+## </param>
+## <param name="object_class">
+##	<summary>
+##	The object class.
+##	</summary>
+## </param>
+## <param name="name" optional="true">
+##	<summary>
+##	The name of the object being created.
+##	</summary>
+## </param>
+#
+interface(`init_var_lib_filetrans',`
+	gen_require(`
+		type init_var_lib_t;
+	')
+	files_search_var_lib($1)
+	filetrans_pattern($1, init_var_lib_t, $2, $3, $4)
+')
+
+########################################
+## <summary>
+##	Create files in an init PID directory.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+## <param name="file_type">
+##	<summary>
+##	The type of the object to be created
+##	</summary>
+## </param>
+## <param name="object_class">
+##	<summary>
+##	The object class.
+##	</summary>
+## </param>
+## <param name="name" optional="true">
+##	<summary>
+##	The name of the object being created.
+##	</summary>
+## </param>
+#
+interface(`init_pid_filetrans',`
+	gen_require(`
+		type init_var_run_t;
+	')
+	files_search_pids($1)
+	filetrans_pattern($1, init_var_run_t, $2, $3, $4)
+')
+

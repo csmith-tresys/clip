@@ -6,6 +6,26 @@
 ##	This module has initial SIDs.
 ## </required>
 
+######################################
+## <summary>
+##	Allows the kernel to start userland processes
+##	by dynamic transitions to the specified domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	The process type entered by the kernel.
+##	</summary>
+## </param>
+#
+interface(`kernel_dyntrans_to',`
+	gen_require(`
+		type kernel_t;
+	')
+
+	allow kernel_t self:process setcurrent;
+	allow kernel_t $1:process dyntransition;
+')
+
 ########################################
 ## <summary>
 ##	Allows to start userland processes
@@ -2982,5 +3002,23 @@ interface(`kernel_stream_connect',`
        ')
 
        allow $1 kernel_t:unix_stream_socket connectto;
+')
+
+########################################
+## <summary>
+##     Relabel to/from all var_run (pid) directories
+## </summary>
+## <param name="domain">
+##     <summary>
+##     Domain allowed access.
+##     </summary>
+## </param>
+#
+interface(`files_relabel_all_pid_dirs',`
+       gen_require(`
+               type pidfile;
+       ')
+
+       relabel_dirs_pattern($1, pidfile, pidfile)
 ')
 
