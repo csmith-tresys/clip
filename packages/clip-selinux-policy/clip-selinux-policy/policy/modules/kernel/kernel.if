@@ -3016,7 +3016,7 @@ interface(`kernel_stream_connect',`
 #
 interface(`files_relabel_all_pid_dirs',`
        gen_require(`
-               type pidfile;
+               attribute pidfile;
        ')
 
        relabel_dirs_pattern($1, pidfile, pidfile)

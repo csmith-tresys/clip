@@ -5946,6 +5946,7 @@ interface(`files_delete_all_pid_dirs',`
 	delete_dirs_pattern($1, pidfile, pidfile)
 ')
 
+
 ########################################
 ## <summary>
 ##	Search the contents of generic spool

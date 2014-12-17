@@ -5,22 +5,42 @@ policy_module(systemd, 1.0.0)
 # Declarations
 #
 
+# make interfaces which generate systemd domain type exec pairs
+# and systemd short running type exec pairs
+
+#type systemd_t;
+#role system_r types systemd_t;
+#type systemd_exec_t;
+#domain_type(systemd_t)
+#domain_entry_file(systemd_t, systemd_exec_t)
+#kernel_domtrans_to(systemd_t, systemd_exec_t)
+
 type systemd_cgroups_t;
+role system_r types systemd_cgroups_t;
 type systemd_cgroups_exec_t;
 domain_type(systemd_cgroups_t)
 domain_entry_file(systemd_cgroups_t, systemd_cgroups_exec_t)
 kernel_domtrans_to(systemd_cgroups_t, systemd_cgroups_exec_t)
 
 type systemd_locale_t;
+role system_r types systemd_locale_t;
 type systemd_locale_exec_t;
+domain_type(systemd_locale_t)
+domain_entry_file(systemd_locale_t, systemd_locale_exec_t)
 init_system_domain(systemd_locale_t, systemd_locale_exec_t)
 
 type systemd_hostnamed_t;
+role system_r types systemd_hostnamed_t;
 type systemd_hostnamed_exec_t;
+domain_type(systemd_hostnamed_t)
+domain_entry_file(systemd_hostnamed_t, systemd_hostnamed_exec_t)
 init_daemon_domain(systemd_hostnamed_t, systemd_hostnamed_exec_t)
 
 type systemd_logind_t;
+role system_r types systemd_logind_t;
 type systemd_logind_exec_t;
+domain_type(systemd_logind_t)
+domain_entry_file(systemd_logind_t, systemd_logind_exec_t)
 init_daemon_domain(systemd_logind_t, systemd_logind_exec_t)
 
 type systemd_logind_var_lib_t;
@@ -30,12 +50,207 @@ type systemd_logind_var_run_t;
 files_type(systemd_logind_var_run_t)
 
 type systemd_sessions_t;
+role system_r types systemd_sessions_t;
 type systemd_sessions_exec_t;
+domain_type(systemd_sessions_t)
+domain_entry_file(systemd_sessions_t, systemd_sessions_exec_t)
 init_daemon_domain(systemd_sessions_t, systemd_sessions_exec_t)
 
 type systemd_utmp_t;
+role system_r types systemd_utmp_t;
 type systemd_utmp_exec_t;
+domain_type(systemd_utmp_t)
+domain_entry_file(systemd_utmp_t, systemd_utmp_exec_t)
 init_system_domain(systemd_utmp_t, systemd_utmp_exec_t)
+
+type systemd_ac_power_t;
+role system_r types systemd_ac_power_t;
+type systemd_ac_power_exec_t;
+domain_type(systemd_ac_power_t)
+domain_entry_file(systemd_ac_power_t, systemd_ac_power_exec_t)
+init_system_domain(systemd_ac_power_t, systemd_ac_power_exec_t)
+
+type systemd_activate_t;
+role system_r types systemd_activate_t;
+type systemd_activate_exec_t;
+domain_type(systemd_activate_t)
+domain_entry_file(systemd_activate_t, systemd_activate_exec_t)
+init_system_domain(systemd_activate_t, systemd_activate_exec_t)
+
+type systemd_backlight_t;
+role system_r types systemd_backlight_t;
+type systemd_backlight_exec_t;
+domain_type(systemd_backlight_t)
+domain_entry_file(systemd_backlight_t, systemd_backlight_exec_t)
+init_system_domain(systemd_backlight_t, systemd_backlight_exec_t)
+
+type systemd_binfmt_t;
+role system_r types systemd_binfmt_t;
+type systemd_binfmt_exec_t;
+domain_type(systemd_binfmt_t)
+domain_entry_file(systemd_binfmt_t, systemd_binfmt_exec_t)
+init_system_domain(systemd_binfmt_t, systemd_binfmt_exec_t)
+
+type systemd_bootchart_t;
+role system_r types systemd_bootchart_t;
+type systemd_bootchart_exec_t;
+domain_type(systemd_bootchart_t)
+domain_entry_file(systemd_bootchart_t, systemd_bootchart_exec_t)
+init_system_domain(systemd_bootchart_t, systemd_bootchart_exec_t)
+
+type systemd_coredump_t;
+role system_r types systemd_coredump_t;
+type systemd_coredump_exec_t;
+domain_type(systemd_coredump_t)
+domain_entry_file(systemd_coredump_t, systemd_coredump_exec_t)
+init_system_domain(systemd_coredump_t, systemd_coredump_exec_t)
+
+type systemd_cryptsetup_t;
+role system_r types systemd_cryptsetup_t;
+type systemd_cryptsetup_exec_t;
+domain_type(systemd_cryptsetup_t)
+domain_entry_file(systemd_cryptsetup_t, systemd_cryptsetup_exec_t)
+init_system_domain(systemd_cryptsetup_t, systemd_cryptsetup_exec_t)
+
+type systemd_fsck_t;
+role system_r types systemd_fsck_t;
+type systemd_fsck_exec_t;
+domain_type(systemd_fsck_t)
+domain_entry_file(systemd_fsck_t, systemd_fsck_exec_t)
+init_system_domain(systemd_fsck_t, systemd_fsck_exec_t)
+
+type systemd_initctl_t;
+role system_r types systemd_initctl_t;
+type systemd_initctl_exec_t;
+domain_type(systemd_initctl_t)
+domain_entry_file(systemd_initctl_t, systemd_initctl_exec_t)
+init_system_domain(systemd_initctl_t, systemd_initctl_exec_t)
+
+type systemd_journald_t;
+role system_r types systemd_cgroups_t;
+type systemd_journald_exec_t;
+domain_type(systemd_journald_t)
+domain_entry_file(systemd_journald_t, systemd_journald_exec_t)
+init_daemon_domain(systemd_journald_t, systemd_journald_exec_t)
+
+type systemd_machined_t;
+role system_r types systemd_machined_t;
+type systemd_machined_exec_t;
+domain_type(systemd_machined_t)
+domain_entry_file(systemd_machined_t, systemd_machined_exec_t)
+init_daemon_domain(systemd_machined_t, systemd_machined_exec_t)
+
+type systemd_modules_load_t;
+role system_r types systemd_modules_load_t;
+type systemd_modules_load_exec_t;
+domain_type(systemd_modules_load_t)
+domain_entry_file(systemd_modules_load_t, systemd_modules_load_exec_t)
+init_system_domain(systemd_modules_load_t, systemd_modules_load_exec_t)
+
+type systemd_multi_seat_x_t;
+role system_r types systemd_multi_seat_x_t;
+type systemd_multi_seat_x_exec_t;
+domain_type(systemd_multi_seat_x_t)
+domain_entry_file(systemd_multi_seat_x_t, systemd_multi_seat_x_exec_t)
+init_system_domain(systemd_multi_seat_x_t, systemd_multi_seat_x_exec_t)
+
+type systemd_quotacheck_t;
+role system_r types systemd_cgroups_t;
+type systemd_quotacheck_exec_t;
+domain_type(systemd_quotacheck_t)
+domain_entry_file(systemd_quotacheck_t, systemd_quotacheck_exec_t)
+init_system_domain(systemd_quotacheck_t, systemd_quotacheck_exec_t)
+
+type systemd_random_seed_t;
+role system_r types systemd_cgroups_t;
+type systemd_random_seed_exec_t;
+domain_type(systemd_random_seed_t)
+domain_entry_file(systemd_random_seed_t, systemd_random_seed_exec_t)
+init_system_domain(systemd_random_seed_t, systemd_random_seed_exec_t)
+
+type systemd_readahead_t;
+role system_r types systemd_readahead_t;
+type systemd_readahead_exec_t;
+domain_type(systemd_readahead_t)
+domain_entry_file(systemd_readahead_t, systemd_readahead_exec_t)
+init_system_domain(systemd_readahead_t, systemd_readahead_exec_t)
+
+type systemd_remount_fs_t;
+role system_r types systemd_remount_fs_t;
+type systemd_remount_fs_exec_t;
+domain_type(systemd_remount_fs_t)
+domain_entry_file(systemd_remount_fs_t, systemd_remount_fs_exec_t)
+init_system_domain(systemd_remount_fs_t, systemd_remount_fs_exec_t)
+
+type systemd_reply_password_t;
+role system_r types systemd_reply_password_t;
+type systemd_reply_password_exec_t;
+domain_type(systemd_reply_password_t)
+domain_entry_file(systemd_reply_password_t, systemd_reply_password_exec_t)
+init_system_domain(systemd_reply_password_t, systemd_reply_password_exec_t)
+
+type systemd_shutdown_t;
+role system_r types systemd_shutdown_t;
+type systemd_shutdown_exec_t;
+domain_type(systemd_shutdown_t)
+domain_entry_file(systemd_shutdown_t, systemd_shutdown_exec_t)
+init_system_domain(systemd_shutdown_t, systemd_shutdown_exec_t)
+
+type systemd_shutdownd_t;
+role system_r types systemd_shutdownd_t;
+type systemd_shutdownd_exec_t;
+domain_type(systemd_shutdownd_t)
+domain_entry_file(systemd_shutdownd_t, systemd_shutdownd_exec_t)
+init_daemon_domain(systemd_shutdownd_t, systemd_shutdownd_exec_t)
+
+type systemd_sleep_t;
+role system_r types systemd_sleep_t;
+type systemd_sleep_exec_t;
+domain_type(systemd_sleep_t)
+domain_entry_file(systemd_sleep_t, systemd_sleep_exec_t)
+init_system_domain(systemd_sleep_t, systemd_sleep_exec_t)
+
+type systemd_sysctl_t;
+role system_r types systemd_sysctl_t;
+type systemd_sysctl_exec_t;
+domain_type(systemd_sysctl_t)
+domain_entry_file(systemd_sysctl_t, systemd_sysctl_exec_t)
+init_system_domain(systemd_sysctl_t, systemd_sysctl_exec_t)
+
+type systemd_timedated_t;
+role system_r types systemd_timedated_t;
+type systemd_timedated_exec_t;
+domain_type(systemd_timedated_t)
+domain_entry_file(systemd_timedated_t, systemd_timedated_exec_t)
+init_daemon_domain(systemd_timedated_t, systemd_timedated_exec_t)
+
+type systemd_udevd_t;
+role system_r types systemd_udevd_t;
+type systemd_udevd_exec_t;
+domain_type(systemd_udevd_t)
+domain_entry_file(systemd_udevd_t, systemd_udevd_exec_t)
+init_daemon_domain(systemd_udevd_t, systemd_udevd_exec_t)
+
+type systemd_update_utmp_t;
+role system_r types systemd_utmp_t;
+type systemd_update_utmp_exec_t;
+domain_type(systemd_update_utmp_t)
+domain_entry_file(systemd_update_utmp_t, systemd_update_utmp_exec_t)
+init_system_domain(systemd_update_utmp_t, systemd_update_utmp_exec_t)
+
+type systemd_user_sessions_t;
+role system_r types systemd_sessions_t;
+type systemd_user_sessions_exec_t;
+domain_type(systemd_user_sessions_t)
+domain_entry_file(systemd_user_sessions_t, systemd_user_sessions_exec_t)
+init_system_domain(systemd_user_sessions_t, systemd_user_sessions_exec_t)
+
+type systemd_vconsole_setup_t;
+role system_r types systemd_vconsole_setup_t;
+type systemd_vconsole_setup_exec_t;
+domain_type(systemd_vconsole_setup_t)
+domain_entry_file(systemd_vconsole_setup_t, systemd_vconsole_setup_exec_t)
+init_system_domain(systemd_vconsole_setup_t, systemd_vconsole_setup_exec_t)
 
 #########################################
 #
@@ -82,9 +297,9 @@ allow systemd_logind_t self:process getcap;
 allow systemd_logind_t self:netlink_kobject_uevent_socket create_socket_perms;
 allow systemd_logind_t self:unix_dgram_socket create_socket_perms;
 
-#init_var_lib_filetrans(systemd_logind_t, system_logind_var_lib_t, dir)
+init_var_lib_filetrans(systemd_logind_t, systemd_logind_var_lib_t, dir)
 
-#init_pid_filetrans(systemd_logind_t, systemd_logind_var_run_t, dir)
+init_pid_filetrans(systemd_logind_t, systemd_logind_var_run_t, dir)
 
 dev_rw_sysfs(systemd_logind_t)
 dev_rw_input_dev(systemd_logind_t)
@@ -103,8 +318,8 @@ term_use_unallocated_ttys(systemd_logind_t)
 
 logging_send_syslog_msg(systemd_logind_t)
 
-#udev_read_db(systemd_logind_t)
-#udev_read_pid_files(systemd_logind_t)
+udev_read_db(systemd_logind_t)
+udev_read_pid_files(systemd_logind_t)
 
 optional_policy(`
 	dbus_system_bus_client(systemd_logind_t)
@@ -119,7 +334,7 @@ dev_relabel_all_sysfs(systemd_tmpfiles_t)
 
 files_read_etc_files(systemd_tmpfiles_t)
 files_relabel_all_lock_dirs(systemd_tmpfiles_t)
-#files_relabel_all_pid_dirs(systemd_tmpfiles_t)
+files_relabel_all_pid_dirs(systemd_tmpfiles_t)
 files_relabel_all_tmp_dirs(systemd_tmpfiles_t)
 
 auth_manage_var_auth(systemd_tmpfiles_t)
@@ -135,5 +350,5 @@ auth_write_login_records(systemd_utmp_t)
 
 init_rw_utmp(systemd_utmp_t)
 
-#logging_send_audit_msgs(systemd_utmp_t)
-#logging_send_syslog_msgs(systemd_utmp_t)
+logging_send_audit_msgs(systemd_utmp_t)
+logging_send_syslog_msg(systemd_utmp_t)
