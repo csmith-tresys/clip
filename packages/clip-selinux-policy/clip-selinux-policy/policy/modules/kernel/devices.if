@@ -3793,6 +3793,42 @@ interface(`dev_associate_sysfs',`
 
 ########################################
 ## <summary>
+##	Getattr a sysfs filesystem.
+## </summary>
+## <param name="file_type">
+##	<summary>
+##	The type of the file to be allowed access.
+##	</summary>
+## </param>
+#
+interface(`dev_getattr_sysfs',`
+	gen_require(`
+		type sysfs_t;
+	')
+
+	allow $1 sysfs_t:filesystem getattr;
+')
+
+########################################
+## <summary>
+##	Relabel sysfs dirs.
+## </summary>
+## <param name="file_type">
+##	<summary>
+##	The type of the file to be allowed access.
+##	</summary>
+## </param>
+#
+interface(`dev_relabel_dir_sysfs',`
+	gen_require(`
+		type sysfs_t;
+	')
+
+	relabel_dirs_pattern($1, sysfs_t, sysfs_t)
+')
+
+########################################
+## <summary>
 ##	Get the attributes of sysfs directories.
 ## </summary>
 ## <param name="domain">
@@ -4804,4 +4840,23 @@ interface(`dev_relabel_all_sysfs',`
 	relabel_files_pattern($1, sysfs_types, sysfs_types)
 	relabel_lnk_files_pattern($1, sysfs_types, sysfs_types)
 	list_dirs_pattern($1, sysfs_types, sysfs_types)
+')
+
+
+#######################################
+## <summary>
+##      Relabel to usb device character device files.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`dev_relabelto_usb_device_chr_files',`
+	gen_require(`
+		type device_t;
+	')
+
+	allow $1 device_t:chr_file relabelfrom;
 ')

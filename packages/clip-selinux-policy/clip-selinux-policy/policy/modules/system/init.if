@@ -1390,6 +1390,25 @@ interface(`init_dbus_send_script',`
 
 ########################################
 ## <summary>
+##	Acquire service and send messages to init scripts over dbus.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`init_dbus_acquire_service_send_script',`
+	gen_require(`
+		type initrc_t;
+		class dbus send_msg;
+	')
+
+	allow $1 initrc_t:dbus { acquire_svc send_msg };
+')
+
+########################################
+## <summary>
 ##	Send and receive messages from
 ##	init scripts over dbus.
 ## </summary>
@@ -1832,3 +1851,21 @@ interface(`init_pid_filetrans',`
 	filetrans_pattern($1, init_var_run_t, $2, $3, $4)
 ')
 
+########################################
+## <summary>
+##	Read init scripts
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`init_read_scripts',`
+	gen_require(`
+		type initctl_t;
+	')
+
+	allow $1 initrc_t:dir search;
+	allow $1 initrc_t:file { getattr open read };
+')

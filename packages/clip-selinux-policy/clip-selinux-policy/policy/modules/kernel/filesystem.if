@@ -3849,6 +3849,26 @@ interface(`fs_getattr_tmpfs',`
 
 ########################################
 ## <summary>
+##	Get the attributes of tmpfs
+##	files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+## <rolecap/>
+#
+interface(`fs_getattr_tmpfs_files',`
+	gen_require(`
+		type tmpfs_t;
+	')
+
+	allow $1 tmpfs_t:file getattr;
+')
+
+########################################
+## <summary>
 ##	Allow the type to associate to tmpfs filesystems.
 ## </summary>
 ## <param name="type">
@@ -4884,4 +4904,23 @@ interface(`fs_unconfined',`
 	')
 
 	typeattribute $1 filesystem_unconfined_type;
+')
+
+
+#######################################
+## <summary>
+##      Relabel tmpfs dirs.
+## </summary>
+## <param name="file_type">
+##      <summary>
+##      The type of the file to be allowed access.
+##      </summary>
+## </param>
+#
+interface(`fs_relabel_dir_tmpfs',`
+	gen_require(`
+		type sysfs_t;
+	')
+
+	relabel_dirs_pattern($1, tmpfs_t, tmpfs_t)
 ')

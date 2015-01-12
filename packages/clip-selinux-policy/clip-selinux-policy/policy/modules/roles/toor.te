@@ -5,6 +5,7 @@ policy_module(toor, 2.3.0)
 # Declarations
 #
 role toor_r;
+#role toor_r types toor_t;
 
 userdom_admin_user_template(toor)
 

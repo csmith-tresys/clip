@@ -3022,3 +3022,21 @@ interface(`files_relabel_all_pid_dirs',`
        relabel_dirs_pattern($1, pidfile, pidfile)
 ')
 
+########################################
+## <summary>
+##     Allow the specified domain to search
+##     kernel dir	
+## </summary>
+## <param name="domain">
+##     <summary>
+##     Domain allowed access.
+##     </summary>
+## </param>
+#
+interface(`kernel_search_dir',`
+       gen_require(`
+               type kernel_t;
+       ')
+
+       allow $1 kernel_t:dir search;
+')

@@ -199,6 +199,47 @@ ifdef(`init_systemd',`
 	# done in traditional sysvinit/upstart.
 	corecmd_bin_entry_type(initrc_t)
 	corecmd_bin_domtrans(init_t, initrc_t)
+	files_service_status_etc(initrc_t)
+	seutil_rw_file_contexts(initrc_t)
+	#systemd_dbus_send_systemd_logind(initrc_t)
+	#systemd_fd_use_systemd_logind(initrc_t)
+')
+
+# systemd init policy
+ifdef(`init_systemd',`
+	clock_rw_adjtime(init_t)
+	fs_unmount_autofs(init_t)
+        fs_manage_cgroup_dirs(init_t)
+        dev_getattr_generic_blk_files(init_t)
+        dev_relabel_all_dev_nodes(init_t)
+        dev_relabel_devpts_dir(init_t)
+        term_getattr_pty_fs(init_t)
+        seutil_read_file_contexts(init_t)
+        storage_raw_read_fixed_disk(init_t)
+        init_dbus_acquire_service_send_script(init_t)
+        init_read_scripts(init_t)
+        kernel_dgram_send(init_t)
+        kernel_stream_connect(init_t)
+        kernel_search_dir(init_t)
+        files_exec_no_trans_lib(init_t)
+        files_service_status_lib(init_t)
+        selinux_compute_access_vector(init_t)
+        kernel_rw_kernel_sysctl(init_t)
+        #dev_getattr_sysfs(init_t)
+        #dev_relabel_dir_sysfs(init_t)
+        fs_getattr_tmpfs(init_t)
+        fs_relabel_dir_tmpfs(init_t)
+        fs_getattr_tmpfs_files(init_t)
+        #dev_relabelto_usb_device_chr_files(init_t)
+        files_search_var_lib(init_t)
+        files_write_var_lib_files(init_t)
+        files_manage_generic_pids_symlinks(init_t)
+        files_relabel_pid_files(init_t)
+        files_relabel_pid_dirs(init_t)
+        #allow init_t systemd_random_seed_exec_t:file { execute execute_no_trans open read };
+        #allow init_t systemd_shutdown_exec_t:file { execute execute_no_trans open read };
+        #allow init_t systemd_user_sessions_t:file { execute execute_no_trans open read };
+        #allow init_t systemd_utmp_exec_t:file { execute execute_no_trans open read };
 ')
 
 allow init_t self:process setsched;

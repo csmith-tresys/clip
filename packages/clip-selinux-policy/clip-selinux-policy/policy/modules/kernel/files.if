@@ -2824,6 +2824,24 @@ interface(`files_etc_filetrans_etc_runtime',`
 
 ########################################
 ## <summary>
+##	Status permissions on etc service object
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`files_service_status_etc',`
+	gen_require(`
+		type etc_t;
+	')
+
+	allow $1 etc_t:service status;
+')
+
+########################################
+## <summary>
 ##	Getattr of directories on new filesystems
 ##	that have not yet been labeled.
 ## </summary>
@@ -6171,3 +6189,114 @@ interface(`files_unconfined',`
 	auth_relabelto_shadow($1)
 	auth_rw_shadow($1)
 ')
+
+#######################################
+## <summary>
+##      Execute library
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain to allow access
+##      </summary>
+## </param>
+#
+interface(`files_exec_no_trans_lib',`
+	gen_require(`
+		attribute lib_t;
+	')
+
+	allow $1 lib_t:file execute_no_trans;
+')
+
+########################################
+## <summary>
+##	Status permissions on lib service object
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`files_service_status_lib',`
+	gen_require(`
+		type lib_t;
+	')
+
+	allow $1 lib_t:service status;
+')
+
+#######################################
+## <summary>
+##      Allow domain to write var_lib files.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`files_write_var_lib_files',`
+	gen_require(`
+		type var_lib_t;
+	')
+
+	allow $1 var_lib_t:file write;
+')
+
+#######################################
+## <summary>
+##     manage generic sock files
+##     in the /var/run directory.
+## </summary>
+## <param name="domain">
+##     <summary>
+##     Domain allowed access.
+##     </summary>
+## </param>
+#
+interface(`files_manage_generic_pids_sock_files',`
+	gen_require(`
+		type var_run_t;
+	')
+
+	manage_sock_files_pattern($1,var_run_t,var_run_t)
+')
+
+
+######################################
+## <summary>
+##      Relabel pid files.
+## </summary>
+## <param name="file_type">
+##      <summary>
+##      The type of the domain to be allowed access.
+##      </summary>
+## </param>
+#
+interface(`files_relabel_pid_files',`
+	gen_require(`
+		type var_run_t;
+	')
+
+	relabel_files_pattern($1, var_run_t, var_run_t)
+')
+
+######################################
+## <summary>
+##      Relabel pid dirs.
+## </summary>
+## <param name="file_type">
+##      <summary>
+##      The type of the domain to be allowed access.
+##      </summary>
+## </param>
+#
+interface(`files_relabel_pid_dirs',`
+	gen_require(`
+		type var_run_t;
+	')
+
+	relabel_dirs_pattern($1, var_run_t, var_run_t)
+')
+                                        

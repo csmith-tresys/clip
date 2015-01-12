@@ -1514,3 +1514,21 @@ interface(`term_dontaudit_use_all_user_ttys',`
 	refpolicywarn(`$0() is deprecated, use term_dontaudit_use_all_ttys() instead.')
 	term_dontaudit_use_all_ttys($1)
 ')
+
+#######################################
+## <summary>
+##      Relabel from/to devpts dir
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`dev_relabel_devpts_dir',`
+	gen_require(`
+		type devpts_t;
+	')
+
+	relabel_dirs_pattern($1, devpts_t, devpts_t)
+')
